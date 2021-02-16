@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react'
 import './App.css';
+import Country from './Components/Country/Country';
+import Item from './Components/Country/Item/Item';
 
 function App() {
+  const [country,setCountry]=useState([])
+  const [item,setItem]=useState([])
+  useEffect(()=>{
+    fetch('https://restcountries.eu/rest/v2/all')
+    .then(res=>res.json())
+    .then(data=>{
+      setCountry(data)
+      console.log(data)
+    })
+  },[])
+  function addCountry(add){
+    setItem([...item,add])
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h2>Country Loaded : {country.length}</h2>
+      <Item item={item}/>
+     {
+       country.map((country)=>{
+         return <Country addCountry={addCountry} key={country.alpha3Code} country={country}/>
+       })
+     }
     </div>
   );
 }
